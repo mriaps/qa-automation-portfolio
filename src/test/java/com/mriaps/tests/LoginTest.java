@@ -1,32 +1,26 @@
 package com.mriaps.tests;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import com.mriaps.pages.LoginPage;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class LoginTest {
+public class LoginTest extends BaseTest {
 
-    private WebDriver driver;
+    @Test
+    public void shouldLoginSuccessfully() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("standard_user", "secret_sauce");
 
-    @BeforeMethod
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
+        Assert.assertTrue(driver.getCurrentUrl().contains("inventory.html"),
+                "User should be redirected to the inventory page after login");
     }
 
     @Test
-    public void shouldOpenLoginPage() {
-        driver.get("https://www.saucedemo.com");
-        Assert.assertEquals(driver.getTitle(), "Swag Labs");
-    }
+    public void shouldShowErrorForLockedOutUser() {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("locked_out_user", "secret_sauce");
 
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        Assert.assertEquals(loginPage.getErrorMessage(),
+                "Epic sadface: Sorry, this user has been locked out.");
     }
 }
