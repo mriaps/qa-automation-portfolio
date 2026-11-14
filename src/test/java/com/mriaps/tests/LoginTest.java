@@ -2,25 +2,31 @@ package com.mriaps.tests;
 
 import com.mriaps.pages.LoginPage;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class LoginTest extends BaseTest {
 
-    @Test
-    public void shouldLoginSuccessfully() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("standard_user", "secret_sauce");
-
-        Assert.assertTrue(driver.getCurrentUrl().contains("inventory.html"),
-                "User should be redirected to the inventory page after login");
+    @DataProvider(name = "loginData")
+    public Object[][] loginData() {
+        return new Object[][] {
+                { "standard_user", "secret_sauce", "SUCCESS" },
+                { "locked_out_user", "secret_sauce", "Epic sadface: Sorry, this user has been locked out." },
+                { "problem_user", "secret_sauce", "SUCCESS" }
+        };
     }
 
-    @Test
-    public void shouldShowErrorForLockedOutUser() {
+    @Test(dataProvider = "loginData")
+    public void shouldHandleLoginAttempts(String username, String password, String expectedResult) {
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("locked_out_user", "secret_sauce");
+        loginPage.login(username, password);
 
-        Assert.assertEquals(loginPage.getErrorMessage(),
-                "Epic sadface: Sorry, this user has been locked out.");
+        if (expectedResult.equals("SUCCESS")) {
+            Assert.assertTrue(driver.getCurrentUrl().contains("inventory.html"),
+                    "User '" + username + "' should be redirected to the inventory page after login");
+        } else {
+            Assert.assertEquals(loginPage.getErrorMessage(), expectedResult,
+                    "Error message mismatch for user '" + username + "'");
+        }
     }
 }
