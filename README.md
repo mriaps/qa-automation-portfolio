@@ -12,7 +12,7 @@ Setiap perubahan kode diverifikasi otomatis lewat **GitHub Actions (CI)**, memas
 |---|---|
 | Java 25 | Bahasa pemrograman utama |
 | Selenium WebDriver 4.52.0 | Automation browser |
-| TestNG 7.12.0 | Framework testing dan assertion |
+| TestNG 7.12.0 | Framework testing dan assertion, termasuk data-driven testing lewat `@DataProvider` |
 | Maven | Dependency management dan build tool |
 | Selenium Manager | Pengelolaan driver browser otomatis (bawaan Selenium, tanpa setup manual) |
 | GitHub Actions | Continuous Integration — menjalankan test otomatis setiap push/PR |
@@ -23,11 +23,14 @@ Setiap perubahan kode diverifikasi otomatis lewat **GitHub Actions (CI)**, memas
 src/test/java/com/mriaps/
 ├── pages/                  # Page Object: menyimpan locator dan aksi tiap halaman
 │   ├── LoginPage.java
-│   └── InventoryPage.java
+│   ├── InventoryPage.java
+│   ├── CartPage.java
+│   └── CheckoutPage.java
 └── tests/                  # Test case dan konfigurasi dasar
     ├── BaseTest.java       # Setup dan teardown browser (mendukung mode headless untuk CI)
-    ├── LoginTest.java      # Test case untuk halaman login
-    └── CartTest.java       # Test case untuk fitur keranjang belanja
+    ├── LoginTest.java      # Data-driven test untuk halaman login
+    ├── CartTest.java       # Test case untuk fitur keranjang belanja
+    └── CheckoutTest.java   # Test end-to-end: login hingga checkout selesai
 
 .github/workflows/
 └── tests.yml               # Workflow CI: menjalankan mvn test otomatis
@@ -41,9 +44,9 @@ Target aplikasi: [SauceDemo](https://www.saucedemo.com)
 
 | Test Case | Deskripsi |
 |---|---|
-| `shouldLoginSuccessfully` | Memverifikasi user berhasil login dan diarahkan ke halaman inventory |
-| `shouldShowErrorForLockedOutUser` | Memverifikasi pesan error muncul saat user locked-out mencoba login |
+| `shouldHandleLoginAttempts` | **Data-driven test** (TestNG `@DataProvider`) yang menjalankan 3 skenario login sekaligus: `standard_user` (berhasil), `locked_out_user` (gagal dengan pesan error), dan `problem_user` (berhasil) |
 | `shouldAddProductToCart` | Memverifikasi produk berhasil ditambahkan dan jumlah di keranjang bertambah |
+| `shouldCompleteCheckoutSuccessfully` | Test end-to-end: login → tambah produk → buka keranjang → isi data checkout → selesaikan pesanan → verifikasi pesan sukses |
 
 ## 🚀 Cara Menjalankan Test
 
@@ -58,10 +61,10 @@ Target aplikasi: [SauceDemo](https://www.saucedemo.com)
 mvn test
 ```
 
-**Jalankan test tertentu (contoh: `CartTest`):**
+**Jalankan test tertentu (contoh: `CheckoutTest`):**
 
 ```bash
-mvn test -Dtest=CartTest
+mvn test -Dtest=CheckoutTest
 ```
 
 ## ⚙️ Continuous Integration
@@ -81,8 +84,10 @@ Lihat riwayat eksekusinya di tab [Actions](https://github.com/mriaps/qa-automati
 - [x] Test login (berhasil dan gagal)
 - [x] Test tambah produk ke keranjang
 - [x] Integrasi GitHub Actions untuk menjalankan test otomatis setiap push
-- [ ] Test proses checkout
-- [ ] Data-driven testing (parameterisasi test dengan beberapa set data)
+- [x] Test proses checkout end-to-end
+- [x] Data-driven testing dengan TestNG `@DataProvider`
+
+Semua target awal sudah tercapai. Ke depannya, repo ini akan terus dikembangkan seiring proses belajar, misalnya dengan menambah skenario test baru, reporting (Allure/ExtentReports), atau parallel test execution.
 
 ## 👤 Tentang Saya
 
