@@ -1,9 +1,12 @@
 package com.mriaps.pages;
 
+import com.mriaps.utils.PriceUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class InventoryPage {
@@ -12,22 +15,28 @@ public class InventoryPage {
 
     private final By cartBadge = By.className("shopping_cart_badge");
     private final By inventoryItems = By.className("inventory_item");
+    private final By itemName = By.className("inventory_item_name");
+    private final By itemPrice = By.className("inventory_item_price");
 
     public InventoryPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void addProductToCart(String productName) {
-        List<WebElement> items = driver.findElements(inventoryItems);
-
-        for (WebElement item : items) {
-            String name = item.findElement(By.className("inventory_item_name")).getText();
-            if (name.equals(productName)) {
-                item.findElement(By.tagName("button")).click();
-                return;
+    private WebElement findProduct(String productName) {
+        for (WebElement item : driver.findElements(inventoryItems)) {
+            if (item.findElement(itemName).getText().equals(productName)) {
+                return item;
             }
         }
-        throw new RuntimeException("Product not found: " + productName);
+        throw new NoSuchElementException("Product not found: " + productName);
+    }
+
+    public void addProductToCart(String productName) {
+        findProduct(productName).findElement(By.tagName("button")).click();
+    }
+
+    public BigDecimal getProductPrice(String productName) {
+        return PriceUtils.parse(findProduct(productName).findElement(itemPrice).getText());
     }
 
     public int getCartItemCount() {
