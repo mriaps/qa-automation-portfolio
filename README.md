@@ -26,11 +26,13 @@ src/test/java/com/mriaps/
 │   ├── InventoryPage.java
 │   ├── CartPage.java
 │   └── CheckoutPage.java
-└── tests/                  # Test case dan konfigurasi dasar
-    ├── BaseTest.java       # Setup dan teardown browser (mendukung mode headless untuk CI)
-    ├── LoginTest.java      # Data-driven test untuk halaman login
-    ├── CartTest.java       # Test case untuk fitur keranjang belanja
-    └── CheckoutTest.java   # Test end-to-end: login hingga checkout selesai
+├── tests/                  # Test case dan konfigurasi dasar
+│   ├── BaseTest.java       # Setup dan teardown browser (mendukung mode headless untuk CI)
+│   ├── LoginTest.java      # Data-driven test untuk halaman login
+│   ├── CartTest.java       # Test case untuk fitur keranjang belanja
+│   └── CheckoutTest.java   # Validasi cart, order summary, negative test, dan end-to-end checkout
+└── utils/                  # Helper reusable
+    └── PriceUtils.java     # Mengubah teks harga (misal "$29.99") menjadi BigDecimal
 
 .github/workflows/
 └── tests.yml               # Workflow CI: menjalankan mvn test otomatis
@@ -46,7 +48,10 @@ Target aplikasi: [SauceDemo](https://www.saucedemo.com)
 |---|---|
 | `shouldHandleLoginAttempts` | **Data-driven test** (TestNG `@DataProvider`) yang menjalankan 3 skenario login sekaligus: `standard_user` (berhasil), `locked_out_user` (gagal dengan pesan error), dan `problem_user` (berhasil) |
 | `shouldAddProductToCart` | Memverifikasi produk berhasil ditambahkan dan jumlah di keranjang bertambah |
-| `shouldCompleteCheckoutSuccessfully` | Test end-to-end: login → tambah produk → buka keranjang → isi data checkout → selesaikan pesanan → verifikasi pesan sukses |
+| `shouldShowCorrectProductDetailsInCart` | Memvalidasi isi keranjang: nama produk, quantity, dan harga sesuai dengan yang ditambahkan dari halaman inventory |
+| `shouldCalculateOrderSummaryCorrectly` | Memvalidasi business logic ringkasan pesanan: subtotal, tax (8%), dan total pembayaran |
+| `shouldCompleteCheckoutSuccessfully` | Test end-to-end: login → tambah produk → isi data checkout → validasi overview (produk dan subtotal) → selesaikan pesanan → verifikasi pesan sukses dan halaman `checkout-complete` |
+| `shouldNotProceedWhenRequiredInformationIsMissing` | **Negative test data-driven**: memastikan checkout tidak bisa dilanjutkan jika first name, last name, atau zip code kosong, dengan memvalidasi pesan error dan posisi halaman |
 
 ## 🚀 Cara Menjalankan Test
 

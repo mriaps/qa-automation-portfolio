@@ -20,6 +20,7 @@ public class BaseTest {
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
 
+        // Matikan fitur Chrome yang mendeteksi password bocor dan menampilkan popup
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("credentials_enable_service", false);
         prefs.put("profile.password_manager_leak_detection", false);
