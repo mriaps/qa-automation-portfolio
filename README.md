@@ -46,7 +46,8 @@ Target aplikasi: [SauceDemo](https://www.saucedemo.com)
 
 | Test Case | Deskripsi |
 |---|---|
-| `shouldHandleLoginAttempts` | **Data-driven test** (TestNG `@DataProvider`) yang menjalankan 3 skenario login sekaligus: `standard_user` (berhasil), `locked_out_user` (gagal dengan pesan error), dan `problem_user` (berhasil) |
+| `shouldLoginSuccessfullyWithValidCredentials` | **Data-driven test**: memverifikasi login berhasil dan user diarahkan ke halaman inventory untuk `standard_user` dan `problem_user` |
+| `shouldRejectInvalidLogin` | **Negative test data-driven** dengan 5 skenario: user terkunci, password salah, username tidak terdaftar, username kosong, dan password kosong. Memvalidasi pesan error dan memastikan user tetap di halaman login |
 | `shouldAddProductToCart` | Memverifikasi produk berhasil ditambahkan dan jumlah di keranjang bertambah |
 | `shouldShowCorrectProductDetailsInCart` | Memvalidasi isi keranjang: nama produk, quantity, dan harga sesuai dengan yang ditambahkan dari halaman inventory |
 | `shouldCalculateOrderSummaryCorrectly` | Memvalidasi business logic ringkasan pesanan: subtotal, tax (8%), dan total pembayaran |
