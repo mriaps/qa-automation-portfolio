@@ -21,6 +21,8 @@ Setiap perubahan kode diverifikasi otomatis lewat **GitHub Actions (CI)**, memas
 
 ```
 src/test/java/com/mriaps/
+├── config/                 # Pembacaan konfigurasi
+│   └── ConfigReader.java   # Membaca config.properties (bisa di-override lewat -Dkey=value)
 ├── drivers/                # Pembuatan dan konfigurasi WebDriver
 │   └── DriverFactory.java  # Membuat Chrome driver (opsi anti-popup, mode headless untuk CI)
 ├── pages/                  # Page Object: menyimpan locator dan aksi tiap halaman
@@ -35,6 +37,9 @@ src/test/java/com/mriaps/
 │   └── CheckoutTest.java   # Validasi cart, order summary, negative test, dan end-to-end checkout
 └── utils/                  # Helper reusable
     └── PriceUtils.java     # Mengubah teks harga (misal "$29.99") menjadi BigDecimal
+
+src/test/resources/
+└── config.properties       # URL aplikasi dan akun demo
 
 .github/workflows/
 └── tests.yml               # Workflow CI: menjalankan mvn test otomatis
@@ -74,6 +79,14 @@ mvn test
 ```bash
 mvn test -Dtest=CheckoutTest
 ```
+
+**Override konfigurasi lewat command line (contoh: environment lain):**
+
+```bash
+mvn test "-Dbase.url=https://staging.contoh.com"
+```
+
+Nilai default (URL aplikasi dan akun demo) ada di `src/test/resources/config.properties`. Parameter `-D` selalu diutamakan daripada isi file.
 
 ## ⚙️ Continuous Integration
 

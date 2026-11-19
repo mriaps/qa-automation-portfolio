@@ -1,5 +1,7 @@
 package com.mriaps.tests;
 
+import com.mriaps.config.ConfigReader;
+
 import com.mriaps.pages.CartPage;
 import com.mriaps.pages.CheckoutPage;
 import com.mriaps.pages.InventoryPage;
@@ -15,8 +17,8 @@ import java.util.List;
 
 public class CheckoutTest extends BaseTest {
 
-    private static final String USERNAME = "standard_user";
-    private static final String PASSWORD = "secret_sauce";
+    private static final String USERNAME = ConfigReader.standardUsername();
+    private static final String PASSWORD = ConfigReader.standardPassword();
     private static final String BACKPACK = "Sauce Labs Backpack";
     private static final String BIKE_LIGHT = "Sauce Labs Bike Light";
     private static final BigDecimal TAX_RATE = new BigDecimal("0.08");
