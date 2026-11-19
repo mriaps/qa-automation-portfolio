@@ -1,5 +1,6 @@
 package com.mriaps.tests;
 
+import com.mriaps.config.ConfigReader;
 import com.mriaps.drivers.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
@@ -12,7 +13,7 @@ public class BaseTest {
     @BeforeMethod
     public void setUp() {
         driver = DriverFactory.createDriver();
-        driver.get("https://www.saucedemo.com");
+        driver.get(ConfigReader.baseUrl());
     }
 
     @AfterMethod(alwaysRun = true)

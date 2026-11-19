@@ -1,5 +1,6 @@
 package com.mriaps.tests;
 
+import com.mriaps.config.ConfigReader;
 import com.mriaps.pages.InventoryPage;
 import com.mriaps.pages.LoginPage;
 import org.testng.Assert;
@@ -10,7 +11,7 @@ public class CartTest extends BaseTest {
     @Test
     public void shouldAddProductToCart() {
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("standard_user", "secret_sauce");
+        loginPage.login(ConfigReader.standardUsername(), ConfigReader.standardPassword());
 
         InventoryPage inventoryPage = new InventoryPage(driver);
         inventoryPage.addProductToCart("Sauce Labs Backpack");
