@@ -21,14 +21,16 @@ Setiap perubahan kode diverifikasi otomatis lewat **GitHub Actions (CI)**, memas
 
 ```
 src/test/java/com/mriaps/
+├── drivers/                # Pembuatan dan konfigurasi WebDriver
+│   └── DriverFactory.java  # Membuat Chrome driver (opsi anti-popup, mode headless untuk CI)
 ├── pages/                  # Page Object: menyimpan locator dan aksi tiap halaman
 │   ├── LoginPage.java
 │   ├── InventoryPage.java
 │   ├── CartPage.java
 │   └── CheckoutPage.java
 ├── tests/                  # Test case dan konfigurasi dasar
-│   ├── BaseTest.java       # Setup dan teardown browser (mendukung mode headless untuk CI)
-│   ├── LoginTest.java      # Data-driven test untuk halaman login
+│   ├── BaseTest.java       # Siklus hidup test: setup dan teardown browser
+│   ├── LoginTest.java      # Data-driven test: login berhasil dan ditolak
 │   ├── CartTest.java       # Test case untuk fitur keranjang belanja
 │   └── CheckoutTest.java   # Validasi cart, order summary, negative test, dan end-to-end checkout
 └── utils/                  # Helper reusable
