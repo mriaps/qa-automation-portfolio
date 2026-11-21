@@ -1,19 +1,17 @@
 package com.mriaps.pages;
 
 import com.mriaps.utils.PriceUtils;
+import com.mriaps.utils.WaitHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.List;
 
 public class CartPage {
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
+    private final WaitHelper wait;
 
     private final By checkoutButton = By.id("checkout");
     private final By cartLink = By.className("shopping_cart_link");
@@ -24,12 +22,12 @@ public class CartPage {
 
     public CartPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WaitHelper(driver);
     }
 
     public void goToCart() {
         driver.findElement(cartLink).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(checkoutButton));
+        wait.visible(checkoutButton);
     }
 
     public void clickCheckout() {

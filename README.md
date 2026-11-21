@@ -36,10 +36,11 @@ src/test/java/com/mriaps/
 │   ├── CartTest.java       # Test case untuk fitur keranjang belanja
 │   └── CheckoutTest.java   # Validasi cart, order summary, negative test, dan end-to-end checkout
 └── utils/                  # Helper reusable
-    └── PriceUtils.java     # Mengubah teks harga (misal "$29.99") menjadi BigDecimal
+    ├── PriceUtils.java     # Mengubah teks harga (misal "$29.99") menjadi BigDecimal
+    └── WaitHelper.java     # Explicit wait terpusat, timeout dibaca dari config
 
 src/test/resources/
-└── config.properties       # URL aplikasi dan akun demo
+└── config.properties       # URL aplikasi, akun demo, dan timeout wait
 
 .github/workflows/
 └── tests.yml               # Workflow CI: menjalankan mvn test otomatis
@@ -84,6 +85,12 @@ mvn test -Dtest=CheckoutTest
 
 ```bash
 mvn test "-Dbase.url=https://staging.contoh.com"
+```
+
+Timeout explicit wait (default 10 detik) juga bisa diubah, misalnya saat CI sedang lambat:
+
+```bash
+mvn test "-Dtimeout.seconds=20"
 ```
 
 Nilai default (URL aplikasi dan akun demo) ada di `src/test/resources/config.properties`. Parameter `-D` selalu diutamakan daripada isi file.

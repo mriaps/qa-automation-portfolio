@@ -1,17 +1,14 @@
 package com.mriaps.pages;
 
+import com.mriaps.utils.WaitHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 public class LoginPage {
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
+    private final WaitHelper wait;
 
     private final By usernameField = By.id("user-name");
     private final By passwordField = By.id("password");
@@ -20,7 +17,7 @@ public class LoginPage {
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WaitHelper(driver);
     }
 
     public void login(String username, String password) {
@@ -30,13 +27,13 @@ public class LoginPage {
     }
 
     public String getErrorMessage() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
+        return wait.visible(errorMessage).getText();
     }
 
-    // Menunggu sampai URL berpindah ke halaman inventory. Mengembalikan false jika tidak berpindah dalam 10 detik.
+    // Menunggu sampai URL berpindah ke halaman inventory. Mengembalikan false jika tidak berpindah sebelum timeout.
     public boolean isLoggedIn() {
         try {
-            return wait.until(ExpectedConditions.urlContains("inventory.html"));
+            return wait.urlContains("inventory.html");
         } catch (TimeoutException e) {
             return false;
         }
