@@ -1,13 +1,11 @@
 package com.mriaps.pages;
 
 import com.mriaps.utils.PriceUtils;
+import com.mriaps.utils.WaitHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.List;
 public class InventoryPage {
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
+    private final WaitHelper wait;
 
     private final By cartBadge = By.className("shopping_cart_badge");
     private final By inventoryItems = By.className("inventory_item");
@@ -24,11 +22,11 @@ public class InventoryPage {
 
     public InventoryPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WaitHelper(driver);
     }
 
     private WebElement findProduct(String productName) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(inventoryItems));
+        wait.visible(inventoryItems);
         for (WebElement item : driver.findElements(inventoryItems)) {
             if (item.findElement(itemName).getText().equals(productName)) {
                 return item;

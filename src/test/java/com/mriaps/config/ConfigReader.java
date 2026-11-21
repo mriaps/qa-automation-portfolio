@@ -45,4 +45,8 @@ public final class ConfigReader {
     public static String standardPassword() {
         return get("standard.password");
     }
+
+    public static int timeoutSeconds() {
+        return Integer.parseInt(get("timeout.seconds"));
+    }
 }

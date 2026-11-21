@@ -1,19 +1,17 @@
 package com.mriaps.pages;
 
 import com.mriaps.utils.PriceUtils;
+import com.mriaps.utils.WaitHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.List;
 
 public class CheckoutPage {
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
+    private final WaitHelper wait;
 
     // Step 1: informasi pembeli
     private final By firstNameField = By.id("first-name");
@@ -35,11 +33,11 @@ public class CheckoutPage {
 
     public CheckoutPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WaitHelper(driver);
     }
 
     public void fillInformation(String firstName, String lastName, String zipCode) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
+        wait.visible(firstNameField);
         driver.findElement(firstNameField).sendKeys(firstName);
         driver.findElement(lastNameField).sendKeys(lastName);
         driver.findElement(zipCodeField).sendKeys(zipCode);
@@ -47,11 +45,11 @@ public class CheckoutPage {
     }
 
     public String getErrorMessage() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
+        return wait.visible(errorMessage).getText();
     }
 
     public List<String> getOverviewItemNames() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(subtotalLabel));
+        wait.visible(subtotalLabel);
         return driver.findElements(overviewItems).stream()
                 .map(item -> item.findElement(itemName).getText())
                 .toList();
@@ -70,13 +68,13 @@ public class CheckoutPage {
     }
 
     private BigDecimal amountOf(By locator) {
-        return PriceUtils.parse(wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText());
+        return PriceUtils.parse(wait.visible(locator).getText());
     }
 
     public void finishOrder() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(finishButton));
+        wait.visible(finishButton);
         driver.findElement(finishButton).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(completeHeader));
+        wait.visible(completeHeader);
     }
 
     public String getCompleteMessage() {
