@@ -43,3 +43,5 @@ build/
 screenshots/
 test-output/
 *.log
+
+.allure/

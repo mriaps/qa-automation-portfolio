@@ -10,6 +10,8 @@ import org.testng.ITestResult;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import io.qameta.allure.Allure;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,6 +42,8 @@ public class ScreenshotListener implements ITestListener {
                     + "_" + LocalDateTime.now().format(TIME_FORMAT) + ".png";
             Path file = SCREENSHOT_DIR.resolve(fileName);
             Files.write(file, png);
+            Allure.addAttachment("Screenshot on failure", "image/png",
+                    new ByteArrayInputStream(png), "png");
 
             System.out.println("Screenshot saved: " + file.toAbsolutePath());
         } catch (IOException | WebDriverException e) {

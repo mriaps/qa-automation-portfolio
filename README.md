@@ -15,6 +15,7 @@ Every code change is verified automatically by **GitHub Actions (CI)**, so the w
 | Java 25 | Main programming language |
 | Selenium WebDriver 4.52.0 | Browser automation |
 | TestNG 7.12.0 | Testing framework and assertions, including data-driven testing with `@DataProvider` |
+| Allure Report 2 | Test reports with status, error details, and failure screenshots |
 | Maven | Dependency management and build tool |
 | Selenium Manager | Automatic browser driver management (built into Selenium, no manual setup) |
 | GitHub Actions | Continuous Integration: runs the tests on every push and pull request |
@@ -23,25 +24,25 @@ Every code change is verified automatically by **GitHub Actions (CI)**, so the w
 
 ```
 src/test/java/com/mriaps/
-├── config/                 # Configuration reading
-│   └── ConfigReader.java   # Reads config.properties (can be overridden with -Dkey=value)
-├── drivers/                # WebDriver creation and configuration
-│   └── DriverFactory.java  # Creates the Chrome driver (anti-popup options, headless mode on CI)
-├── listeners/              # TestNG listeners
-│   └── ScreenshotListener.java  # Takes a screenshot automatically when a test fails
-├── pages/                  # Page Objects: locators and actions for each page
+├── config/                      # Configuration reading
+│   └── ConfigReader.java        # Reads config.properties (can be overridden with -Dkey=value)
+├── drivers/                     # WebDriver creation and configuration
+│   └── DriverFactory.java       # Creates the Chrome driver (anti-popup options, headless mode on CI)
+├── listeners/                   # TestNG listeners
+│   └── ScreenshotListener.java  # Takes a screenshot when a test fails and attaches it to the Allure report
+├── pages/                       # Page Objects: locators and actions for each page
 │   ├── LoginPage.java
 │   ├── InventoryPage.java
 │   ├── CartPage.java
 │   └── CheckoutPage.java
-├── tests/                  # Test cases and base setup
-│   ├── BaseTest.java       # Test lifecycle: browser setup and teardown
-│   ├── LoginTest.java      # Data-driven tests: successful and rejected logins
-│   ├── CartTest.java       # Shopping cart test
-│   └── CheckoutTest.java   # Cart validation, order summary, negative tests, and end-to-end checkout
-└── utils/                  # Reusable helpers
-    ├── PriceUtils.java     # Converts price text (e.g. "$29.99") to BigDecimal
-    └── WaitHelper.java     # Centralized explicit waits, timeout read from config
+├── tests/                       # Test cases and base setup
+│   ├── BaseTest.java            # Test lifecycle: browser setup and teardown
+│   ├── LoginTest.java           # Data-driven tests: successful and rejected logins
+│   ├── CartTest.java            # Shopping cart test
+│   └── CheckoutTest.java        # Cart validation, order summary, negative tests, and end-to-end checkout
+└── utils/                       # Reusable helpers
+    ├── PriceUtils.java          # Converts price text (e.g. "$29.99") to BigDecimal
+    └── WaitHelper.java          # Centralized explicit waits, timeout read from config
 
 src/test/resources/
 └── config.properties       # Application URL, demo account, and wait timeout
@@ -99,7 +100,17 @@ mvn test "-Dtimeout.seconds=20"
 
 Default values (application URL and demo account) live in `src/test/resources/config.properties`. A `-D` parameter always takes priority over the file.
 
-**Screenshot on failure:** every failed test automatically gets a screenshot saved in `target/screenshots/`. The file name contains the class name, the test name, and the date and time, for example `CartTest_shouldAddProductToCart_2026-11-22_14-30-05-123.png`.
+**Screenshot on failure:** 
+every failed test automatically gets a screenshot saved in `target/screenshots/`. The file name contains the class name, the test name, and the date and time, for example `CartTest_shouldAddProductToCart_2026-11-22_14-30-05-123.png`.
+
+**Test report (Allure):** after the tests finish, open an interactive report in your browser:
+
+```bash
+mvn clean test
+mvn allure:serve
+```
+
+The report lists every test with its status, error message, stack trace, and, for failed tests, the screenshot. The first run downloads Allure automatically. Press `Ctrl+C` to stop the local server. Raw results are written to `target/allure-results`.
 
 ## ⚙️ Continuous Integration
 
@@ -122,7 +133,7 @@ See the execution history in the [Actions](https://github.com/mriaps/qa-automati
 - [x] Stronger assertions: cart details, order summary (subtotal, tax, total), and negative checkout scenarios
 - [x] Framework refactoring: `DriverFactory`, externalized configuration, and a centralized `WaitHelper`
 - [x] Automatic screenshot on test failure
-- [ ] Allure Report
+- [x] Allure Report (local report with failure screenshots)
 - [ ] Upload the test report and screenshots as CI artifacts
 - [ ] Maven dependency caching in CI
 - [ ] Mobile automation with Appium (Android first)

@@ -15,6 +15,7 @@ Setiap perubahan kode diverifikasi otomatis lewat **GitHub Actions (CI)**, memas
 | Java 25 | Bahasa pemrograman utama |
 | Selenium WebDriver 4.52.0 | Automation browser |
 | TestNG 7.12.0 | Framework testing dan assertion, termasuk data-driven testing lewat `@DataProvider` |
+| Allure Report 2 | Laporan test berisi status, detail error, dan screenshot saat gagal |
 | Maven | Dependency management dan build tool |
 | Selenium Manager | Pengelolaan driver browser otomatis (bawaan Selenium, tanpa setup manual) |
 | GitHub Actions | Continuous Integration — menjalankan test otomatis setiap push/PR |
@@ -28,7 +29,7 @@ src/test/java/com/mriaps/
 ├── drivers/                # Pembuatan dan konfigurasi WebDriver
 │   └── DriverFactory.java  # Membuat Chrome driver (opsi anti-popup, mode headless untuk CI)
 ├── listeners/              # TestNG listener
-│   └── ScreenshotListener.java  # Mengambil screenshot otomatis saat test gagal
+│   └── ScreenshotListener.java  # Mengambil screenshot saat test gagal dan melampirkannya ke Allure Report
 ├── pages/                  # Page Object: menyimpan locator dan aksi tiap halaman
 │   ├── LoginPage.java
 │   ├── InventoryPage.java
@@ -99,7 +100,17 @@ mvn test "-Dtimeout.seconds=20"
 
 Nilai default (URL aplikasi dan akun demo) ada di `src/test/resources/config.properties`. Parameter `-D` selalu diutamakan daripada isi file.
 
-**Screenshot saat test gagal:** setiap test yang gagal otomatis diambil screenshot-nya dan disimpan di `target/screenshots/` (nama file memuat nama class, nama test, dan timestamp).
+**Screenshot saat test gagal:** 
+setiap test yang gagal otomatis diambil screenshot-nya dan disimpan di `target/screenshots/` (nama file memuat nama class, nama test, dan timestamp).
+
+**Laporan test (Allure):** setelah test selesai, buka laporan interaktif di browser:
+
+```bash
+mvn clean test
+mvn allure:serve
+```
+
+Laporan menampilkan setiap test beserta status, pesan error, stack trace, dan screenshot untuk test yang gagal. Run pertama mengunduh Allure secara otomatis. Tekan `Ctrl+C` untuk menghentikan server lokal. Hasil mentah ditulis ke `target/allure-results`.
 
 ## ⚙️ Continuous Integration
 
@@ -124,12 +135,11 @@ Lihat riwayat eksekusinya di tab [Actions](https://github.com/mriaps/qa-automati
 - [x] Assertion yang lebih kuat: detail keranjang, ringkasan pesanan (subtotal, tax, total), dan skenario negatif checkout
 - [x] Refactoring framework: `DriverFactory`, konfigurasi eksternal, dan `WaitHelper` terpusat
 - [x] Screenshot otomatis saat test gagal
-- [ ] Allure Report
+- [x] Allure Report (laporan lokal dengan screenshot saat gagal)
 - [ ] Upload laporan test dan screenshot sebagai artifact CI
 - [ ] Maven dependency caching di CI
 - [ ] Mobile automation dengan Appium (Android lebih dulu)
 
-Semua target awal sudah tercapai. Ke depannya, repo ini akan terus dikembangkan seiring proses belajar, misalnya dengan menambah skenario test baru, reporting (Allure/ExtentReports), atau parallel test execution.
 
 ## 👤 Tentang Saya
 
