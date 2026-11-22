@@ -1,131 +1,137 @@
 # QA Automation Portfolio
 
+🌐 **English** | [Bahasa Indonesia](README.id.md)
+
 [![Run Selenium Tests](https://github.com/mriaps/qa-automation-portfolio/actions/workflows/tests.yml/badge.svg)](https://github.com/mriaps/qa-automation-portfolio/actions/workflows/tests.yml)
 
-Portofolio pembelajaran dan praktik test automation menggunakan **Selenium WebDriver** dan **Java**, dibangun dengan prinsip **Page Object Model (POM)** untuk struktur kode yang rapi dan mudah dikembangkan.
+A learning and practice portfolio for test automation using **Selenium WebDriver** and **Java**, built with the **Page Object Model (POM)** pattern to keep the code clean and easy to extend.
 
-Setiap perubahan kode diverifikasi otomatis lewat **GitHub Actions (CI)**, memastikan seluruh test tetap berjalan dengan baik setiap kali ada push atau pull request.
+Every code change is verified automatically by **GitHub Actions (CI)**, so the whole test suite runs on every push and pull request.
 
 ## 🛠️ Tech Stack
 
-| Tools | Fungsi |
+| Tool | Purpose |
 |---|---|
-| Java 25 | Bahasa pemrograman utama |
-| Selenium WebDriver 4.52.0 | Automation browser |
-| TestNG 7.12.0 | Framework testing dan assertion, termasuk data-driven testing lewat `@DataProvider` |
-| Maven | Dependency management dan build tool |
-| Selenium Manager | Pengelolaan driver browser otomatis (bawaan Selenium, tanpa setup manual) |
-| GitHub Actions | Continuous Integration — menjalankan test otomatis setiap push/PR |
+| Java 25 | Main programming language |
+| Selenium WebDriver 4.52.0 | Browser automation |
+| TestNG 7.12.0 | Testing framework and assertions, including data-driven testing with `@DataProvider` |
+| Maven | Dependency management and build tool |
+| Selenium Manager | Automatic browser driver management (built into Selenium, no manual setup) |
+| GitHub Actions | Continuous Integration: runs the tests on every push and pull request |
 
-## 📂 Struktur Project
+## 📂 Project Structure
 
 ```
 src/test/java/com/mriaps/
-├── config/                 # Pembacaan konfigurasi
-│   └── ConfigReader.java   # Membaca config.properties (bisa di-override lewat -Dkey=value)
-├── drivers/                # Pembuatan dan konfigurasi WebDriver
-│   └── DriverFactory.java  # Membuat Chrome driver (opsi anti-popup, mode headless untuk CI)
-├── listeners/              # TestNG listener
-│   └── ScreenshotListener.java  # Mengambil screenshot otomatis saat test gagal
-├── pages/                  # Page Object: menyimpan locator dan aksi tiap halaman
+├── config/                 # Configuration reading
+│   └── ConfigReader.java   # Reads config.properties (can be overridden with -Dkey=value)
+├── drivers/                # WebDriver creation and configuration
+│   └── DriverFactory.java  # Creates the Chrome driver (anti-popup options, headless mode on CI)
+├── listeners/              # TestNG listeners
+│   └── ScreenshotListener.java  # Takes a screenshot automatically when a test fails
+├── pages/                  # Page Objects: locators and actions for each page
 │   ├── LoginPage.java
 │   ├── InventoryPage.java
 │   ├── CartPage.java
 │   └── CheckoutPage.java
-├── tests/                  # Test case dan konfigurasi dasar
-│   ├── BaseTest.java       # Siklus hidup test: setup dan teardown browser
-│   ├── LoginTest.java      # Data-driven test: login berhasil dan ditolak
-│   ├── CartTest.java       # Test case untuk fitur keranjang belanja
-│   └── CheckoutTest.java   # Validasi cart, order summary, negative test, dan end-to-end checkout
-└── utils/                  # Helper reusable
-    ├── PriceUtils.java     # Mengubah teks harga (misal "$29.99") menjadi BigDecimal
-    └── WaitHelper.java     # Explicit wait terpusat, timeout dibaca dari config
+├── tests/                  # Test cases and base setup
+│   ├── BaseTest.java       # Test lifecycle: browser setup and teardown
+│   ├── LoginTest.java      # Data-driven tests: successful and rejected logins
+│   ├── CartTest.java       # Shopping cart test
+│   └── CheckoutTest.java   # Cart validation, order summary, negative tests, and end-to-end checkout
+└── utils/                  # Reusable helpers
+    ├── PriceUtils.java     # Converts price text (e.g. "$29.99") to BigDecimal
+    └── WaitHelper.java     # Centralized explicit waits, timeout read from config
 
 src/test/resources/
-└── config.properties       # URL aplikasi, akun demo, dan timeout wait
+└── config.properties       # Application URL, demo account, and wait timeout
 
 .github/workflows/
-└── tests.yml               # Workflow CI: menjalankan mvn test otomatis
+└── tests.yml               # CI workflow: runs mvn test automatically
 ```
 
-Project mengikuti pola **Page Object Model**: logika interaksi dengan elemen halaman dipisah dari logika pengujian (assertion), sehingga kode lebih mudah dibaca, dipelihara, dan dikembangkan untuk halaman atau skenario baru.
+The project follows the **Page Object Model**: the logic for interacting with page elements is kept separate from the test logic (assertions), which makes the code easier to read, maintain, and extend with new pages or scenarios.
 
-## ✅ Test yang Tersedia
+## ✅ Available Tests
 
-Target aplikasi: [SauceDemo](https://www.saucedemo.com)
+Application under test: [SauceDemo](https://www.saucedemo.com)
 
-| Test Case | Deskripsi |
+| Test Case | Description |
 |---|---|
-| `shouldLoginSuccessfullyWithValidCredentials` | **Data-driven test**: memverifikasi login berhasil dan user diarahkan ke halaman inventory untuk `standard_user` dan `problem_user` |
-| `shouldRejectInvalidLogin` | **Negative test data-driven** dengan 5 skenario: user terkunci, password salah, username tidak terdaftar, username kosong, dan password kosong. Memvalidasi pesan error dan memastikan user tetap di halaman login |
-| `shouldAddProductToCart` | Memverifikasi produk berhasil ditambahkan dan jumlah di keranjang bertambah |
-| `shouldShowCorrectProductDetailsInCart` | Memvalidasi isi keranjang: nama produk, quantity, dan harga sesuai dengan yang ditambahkan dari halaman inventory |
-| `shouldCalculateOrderSummaryCorrectly` | Memvalidasi business logic ringkasan pesanan: subtotal, tax (8%), dan total pembayaran |
-| `shouldCompleteCheckoutSuccessfully` | Test end-to-end: login → tambah produk → isi data checkout → validasi overview (produk dan subtotal) → selesaikan pesanan → verifikasi pesan sukses dan halaman `checkout-complete` |
-| `shouldNotProceedWhenRequiredInformationIsMissing` | **Negative test data-driven**: memastikan checkout tidak bisa dilanjutkan jika first name, last name, atau zip code kosong, dengan memvalidasi pesan error dan posisi halaman |
+| `shouldLoginSuccessfullyWithValidCredentials` | **Data-driven test**: verifies that login succeeds and the user lands on the inventory page for `standard_user` and `problem_user` |
+| `shouldRejectInvalidLogin` | **Data-driven negative test** with 5 scenarios: locked-out user, wrong password, unregistered username, empty username, and empty password. Validates the error message and that the user stays on the login page |
+| `shouldAddProductToCart` | Verifies that a product is added and the cart count increases |
+| `shouldShowCorrectProductDetailsInCart` | Validates the cart contents: product names, quantities, and prices match what was added from the inventory page |
+| `shouldCalculateOrderSummaryCorrectly` | Validates the order summary business logic: subtotal, tax (8%), and total |
+| `shouldCompleteCheckoutSuccessfully` | End-to-end test: login → add product → fill checkout details → validate the overview (product and subtotal) → finish the order → verify the success message and the `checkout-complete` page |
+| `shouldNotProceedWhenRequiredInformationIsMissing` | **Data-driven negative test**: verifies that checkout cannot continue when first name, last name, or zip code is empty, by validating the error message and the current page |
 
-## 🚀 Cara Menjalankan Test
+## 🚀 How to Run the Tests
 
-**Prasyarat:**
-- Java 25 (atau versi LTS terbaru)
+**Prerequisites:**
+- Java 25 (or the latest LTS version)
 - Maven 3.9+
-- Google Chrome terpasang
+- Google Chrome installed
 
-**Jalankan seluruh test:**
+**Run all tests:**
 
 ```bash
 mvn test
 ```
 
-**Jalankan test tertentu (contoh: `CheckoutTest`):**
+**Run a specific test class (example: `CheckoutTest`):**
 
 ```bash
 mvn test -Dtest=CheckoutTest
 ```
 
-**Override konfigurasi lewat command line (contoh: environment lain):**
+**Override configuration from the command line (example: another environment):**
 
 ```bash
-mvn test "-Dbase.url=https://staging.contoh.com"
+mvn test "-Dbase.url=https://staging.example.com"
 ```
 
-Timeout explicit wait (default 10 detik) juga bisa diubah, misalnya saat CI sedang lambat:
+The explicit wait timeout (10 seconds by default) can also be changed, for example when CI is slow:
 
 ```bash
 mvn test "-Dtimeout.seconds=20"
 ```
 
-Nilai default (URL aplikasi dan akun demo) ada di `src/test/resources/config.properties`. Parameter `-D` selalu diutamakan daripada isi file.
+Default values (application URL and demo account) live in `src/test/resources/config.properties`. A `-D` parameter always takes priority over the file.
 
-**Screenshot saat test gagal:** setiap test yang gagal otomatis diambil screenshot-nya dan disimpan di `target/screenshots/` (nama file memuat nama class, nama test, dan timestamp).
+**Screenshot on failure:** every failed test automatically gets a screenshot saved in `target/screenshots/`. The file name contains the class name, the test name, and the date and time, for example `CartTest_shouldAddProductToCart_2026-11-22_14-30-05-123.png`.
 
 ## ⚙️ Continuous Integration
 
-Setiap push dan pull request ke branch `main` otomatis memicu GitHub Actions untuk:
+Every push and pull request to the `main` branch automatically triggers GitHub Actions to:
 
-1. Menyiapkan environment (Java 25 dan Google Chrome)
-2. Menjalankan seluruh test dalam mode headless
-3. Melaporkan hasilnya langsung di pull request
+1. Set up the environment (Java 25 and Google Chrome)
+2. Run the whole test suite in headless mode
+3. Report the result directly on the pull request
 
-Lihat riwayat eksekusinya di tab [Actions](https://github.com/mriaps/qa-automation-portfolio/actions).
+See the execution history in the [Actions](https://github.com/mriaps/qa-automation-portfolio/actions) tab.
 
 ## 🗺️ Roadmap
 
-- [x] Setup project Maven dengan Selenium dan TestNG
-- [x] Implementasi Page Object Model
-- [x] Test login (berhasil dan gagal)
-- [x] Test tambah produk ke keranjang
-- [x] Integrasi GitHub Actions untuk menjalankan test otomatis setiap push
-- [x] Test proses checkout end-to-end
-- [x] Data-driven testing dengan TestNG `@DataProvider`
+- [x] Maven project setup with Selenium and TestNG
+- [x] Page Object Model
+- [x] Login tests (positive and negative, data-driven)
+- [x] Add-to-cart test
+- [x] GitHub Actions CI
+- [x] End-to-end checkout test
+- [x] Stronger assertions: cart details, order summary (subtotal, tax, total), and negative checkout scenarios
+- [x] Framework refactoring: `DriverFactory`, externalized configuration, and a centralized `WaitHelper`
+- [x] Automatic screenshot on test failure
+- [ ] Allure Report
+- [ ] Upload the test report and screenshots as CI artifacts
+- [ ] Maven dependency caching in CI
+- [ ] Mobile automation with Appium (Android first)
 
-Semua target awal sudah tercapai. Ke depannya, repo ini akan terus dikembangkan seiring proses belajar, misalnya dengan menambah skenario test baru, reporting (Allure/ExtentReports), atau parallel test execution.
-
-## 👤 Tentang Saya
+## 👤 About Me
 
 **Muhammad Rio Apriansah**
 
 - 📧 Email: mrioapriansah22@gmail.com
 - 💼 LinkedIn: [linkedin.com/in/mriaps](http://www.linkedin.com/in/mriaps)
 
-Repo ini adalah bagian dari proses belajar saya membangun portofolio QA Automation. Terbuka untuk masukan, diskusi, atau kolaborasi.
+This repository is part of my journey in building a QA Automation portfolio. I welcome feedback, discussion, and collaboration.
