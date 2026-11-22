@@ -2,10 +2,13 @@ package com.mriaps.tests;
 
 import com.mriaps.config.ConfigReader;
 import com.mriaps.drivers.DriverFactory;
+import com.mriaps.listeners.ScreenshotListener;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 
+@Listeners(ScreenshotListener.class)
 public class BaseTest {
 
     protected WebDriver driver;
@@ -21,5 +24,9 @@ public class BaseTest {
         if (driver != null) {
             driver.quit();
         }
+    }
+
+    public WebDriver getDriver() {
+        return driver;
     }
 }

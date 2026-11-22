@@ -25,6 +25,8 @@ src/test/java/com/mriaps/
 │   └── ConfigReader.java   # Membaca config.properties (bisa di-override lewat -Dkey=value)
 ├── drivers/                # Pembuatan dan konfigurasi WebDriver
 │   └── DriverFactory.java  # Membuat Chrome driver (opsi anti-popup, mode headless untuk CI)
+├── listeners/              # TestNG listener
+│   └── ScreenshotListener.java  # Mengambil screenshot otomatis saat test gagal
 ├── pages/                  # Page Object: menyimpan locator dan aksi tiap halaman
 │   ├── LoginPage.java
 │   ├── InventoryPage.java
@@ -94,6 +96,8 @@ mvn test "-Dtimeout.seconds=20"
 ```
 
 Nilai default (URL aplikasi dan akun demo) ada di `src/test/resources/config.properties`. Parameter `-D` selalu diutamakan daripada isi file.
+
+**Screenshot saat test gagal:** setiap test yang gagal otomatis diambil screenshot-nya dan disimpan di `target/screenshots/` (nama file memuat nama class, nama test, dan timestamp).
 
 ## ⚙️ Continuous Integration
 
