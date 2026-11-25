@@ -116,9 +116,16 @@ Laporan menampilkan setiap test beserta status, pesan error, stack trace, dan sc
 
 Setiap push dan pull request ke branch `main` otomatis memicu GitHub Actions untuk:
 
-1. Menyiapkan environment (Java 25 dan Google Chrome)
+1. Menyiapkan environment (Java 25 dan Google Chrome), dengan dependency Maven yang di-cache antar run
 2. Menjalankan seluruh test dalam mode headless
-3. Melaporkan hasilnya langsung di pull request
+3. Meng-upload hasil mentah Allure dan screenshot saat gagal sebagai artifact workflow (disimpan 14 hari, tetap diunggah walau test gagal)
+4. Melaporkan hasilnya langsung di pull request
+
+Untuk mengunduh artifact dari sebuah run, buka run-nya di tab Actions lalu gulir ke bagian **Artifacts**, atau pakai GitHub CLI:
+
+```bash
+gh run download <run-id> -n failure-screenshots
+```
 
 Lihat riwayat eksekusinya di tab [Actions](https://github.com/mriaps/qa-automation-portfolio/actions).
 
@@ -136,9 +143,8 @@ Lihat riwayat eksekusinya di tab [Actions](https://github.com/mriaps/qa-automati
 - [x] Refactoring framework: `DriverFactory`, konfigurasi eksternal, dan `WaitHelper` terpusat
 - [x] Screenshot otomatis saat test gagal
 - [x] Allure Report (laporan lokal dengan screenshot saat gagal)
-- [ ] Upload laporan test dan screenshot sebagai artifact CI
-- [ ] Maven dependency caching di CI
-- [ ] Mobile automation dengan Appium (Android lebih dulu)
+- [x] Upload laporan test dan screenshot sebagai artifact CI
+- [x] Maven dependency caching di CI
 
 
 ## 👤 Tentang Saya
