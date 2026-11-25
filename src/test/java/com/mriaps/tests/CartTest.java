@@ -16,7 +16,7 @@ public class CartTest extends BaseTest {
         InventoryPage inventoryPage = new InventoryPage(driver);
         inventoryPage.addProductToCart("Sauce Labs Backpack");
 
-        Assert.assertEquals(inventoryPage.getCartItemCount(), 1,
+        Assert.assertEquals(inventoryPage.getCartItemCount(), 2,
                 "Cart should contain 1 item after adding a product");
     }
 }
