@@ -116,9 +116,16 @@ The report lists every test with its status, error message, stack trace, and, fo
 
 Every push and pull request to the `main` branch automatically triggers GitHub Actions to:
 
-1. Set up the environment (Java 25 and Google Chrome)
+1. Set up the environment (Java 25 and Google Chrome), with Maven dependencies cached between runs
 2. Run the whole test suite in headless mode
-3. Report the result directly on the pull request
+3. Upload the raw Allure results and the failure screenshots as workflow artifacts (kept for 14 days, even when tests fail)
+4. Report the result directly on the pull request
+
+To download the artifacts of a run, open it in the Actions tab and scroll to **Artifacts**, or use the GitHub CLI:
+
+```bash
+gh run download <run-id> -n failure-screenshots
+```
 
 See the execution history in the [Actions](https://github.com/mriaps/qa-automation-portfolio/actions) tab.
 
@@ -134,9 +141,8 @@ See the execution history in the [Actions](https://github.com/mriaps/qa-automati
 - [x] Framework refactoring: `DriverFactory`, externalized configuration, and a centralized `WaitHelper`
 - [x] Automatic screenshot on test failure
 - [x] Allure Report (local report with failure screenshots)
-- [ ] Upload the test report and screenshots as CI artifacts
-- [ ] Maven dependency caching in CI
-- [ ] Mobile automation with Appium (Android first)
+- [x] Upload the test report and screenshots as CI artifacts
+- [x] Maven dependency caching in CI
 
 ## 👤 About Me
 
